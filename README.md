@@ -1,5 +1,5 @@
 # strictstrings
-Configurable string extraction and processing tool.  
+Configurable string extraction and processing tool for binary files.  
 Performs the following filtering techniques:
 * Minimum and maximum string length
 * Language detection
@@ -7,13 +7,16 @@ Performs the following filtering techniques:
 * Impossible ngrams
 * Levenshtein similarity filtering
 
-Most of the filtering techniques are configurable base on the command line arguments.
+Most of the filtering techniques are configurable base on the command line arguments.  
+To view filtered strings, use the `--logs` argument to output the results to a directory.
 
 
 ## Building:
-git clone git@github.com:readcoil/strictstrings_dev.git \
-cd strictstrings_dev \
-cargo build --release \
+```
+> git clone git@github.com:readcoil/strictstrings_dev.git \
+> cd strictstrings_dev \
+> cargo build --release \
+```
 
 ## Running:
 ```
