@@ -13,8 +13,8 @@ To view filtered strings, use the `--logs` argument to output the results to a d
 
 ## Building:
 ```
-> git clone git@github.com:readcoil/strictstrings_dev.git \
-> cd strictstrings_dev \
+> git clone git@github.com:readcoil/strictstrings.git \
+> cd strictstrings \
 > cargo build --release \
 ```
 
