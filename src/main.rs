@@ -44,7 +44,7 @@ fn print_remaining(count_remain: usize, quiet: bool) {
     if quiet.not() {
         if count_remain == 0 {
                 println!("No strings found.");
-                std::process::exit(1);
+                std::process::exit(0);
         }
         else {
             println!("Remaining strings: {}", count_remain);
@@ -287,7 +287,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>>  {
         if !quiet {
             println!("No strings found.");
         }
-        std::process::exit(1);
+        std::process::exit(0);
     }
 
     let pb_lang = ProgressBar::new(total_strings);
