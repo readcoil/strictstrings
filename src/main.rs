@@ -9,6 +9,7 @@ use std::io::{Read};
 use std::io::prelude::*;
 use std::ops::Not;
 use std::path::Path;
+use std::process;
 use std::str;
 use std::time::Instant;
 use strsim::normalized_levenshtein;
@@ -398,37 +399,42 @@ fn main() -> Result<(), Box<dyn std::error::Error>>  {
 
     print_remaining(sorted_strings.len(), quiet);
 
-    let mut current_string = &sorted_strings[0];
-    let mut filtered_by_leven = Vec::new();
+    if !sorted_strings.is_empty() {
+        let mut current_string = &sorted_strings[0];
+        let mut filtered_by_leven = Vec::new();
 
-    for i in 1..sorted_strings.len() {
-        if !quiet {
-            pb_sim.inc(1);
-        }
+        for i in 1..sorted_strings.len() {
+            if !quiet {
+                pb_sim.inc(1);
+            }
 
-        let similarity = normalized_levenshtein(current_string, &sorted_strings[i]);
-        
-        if similarity < leven_threshold {
-            final_strings.push(current_string.to_string());
-            current_string = &sorted_strings[i];
-        } else {
-            filtered_by_leven.push(sorted_strings[i].to_string());
-        }
-    }
-    if logging {
-        if let Some(ref log_dir) = log_dir_option {
-            let mut log_file = fs::File::create(format!("{}/filtered_by_leven.txt", log_dir))?;
-            for string in filtered_by_leven.iter() {
-                log_file.write_all(string.as_bytes())?;
-                log_file.write_all(b"\n")?;
+            let similarity = normalized_levenshtein(current_string, &sorted_strings[i]);
+            
+            if similarity < leven_threshold {
+                final_strings.push(current_string.to_string());
+                current_string = &sorted_strings[i];
+            } else {
+                filtered_by_leven.push(sorted_strings[i].to_string());
             }
         }
+        if logging {
+            if let Some(ref log_dir) = log_dir_option {
+                let mut log_file = fs::File::create(format!("{}/filtered_by_leven.txt", log_dir))?;
+                for string in filtered_by_leven.iter() {
+                    log_file.write_all(string.as_bytes())?;
+                    log_file.write_all(b"\n")?;
+                }
+            }
+        }
+
+        final_strings.push(current_string.to_string());
+        final_strings.sort_by_key(|s| s.to_lowercase());
+    } else {
+        if !quiet {
+            println!("No strings to process.");
+        }
+        process::exit(0);
     }
-
-    final_strings.push(current_string.to_string());
-    final_strings.sort_by_key(|s| s.to_lowercase());
-
-
 
     // Print results
     if !quiet {
